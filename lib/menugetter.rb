@@ -109,7 +109,7 @@ class MenuGetter
 	def self.parse_notpre(elem, sub)
 		elem.css('br').each{ |br| br.replace ";" }
 		text = elem.text
-		text.gsub!("\n", "")
+		text.gsub!(/\n/, "")
 		text.split(";").each do |e|
 			clean(e)
 			if e != nil && e != ""
@@ -124,7 +124,5 @@ class MenuGetter
 		string.strip!
 	end
 end
-
-MenuGetter.getMenu("quimica")
 
 
