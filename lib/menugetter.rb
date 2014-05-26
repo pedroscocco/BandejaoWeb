@@ -119,7 +119,7 @@ class MenuGetter
 	end
 
 	def self.clean(string)
-		string.gsub!(/[^\w\s-\/]/, '')
+		string.gsub!(/[^\w\s\-\/]/, '')
 		string.squeeze!(" ")
 		string.strip!
 	end
