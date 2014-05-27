@@ -34,7 +34,7 @@ class MenuGetter
 	def self.getMenu(restaurante)
 		url = "http://www.usp.br/coseas/cardapio#{restaurante}.html"
 		html = open(url)
-		doc = Nokogiri::HTML(html.read, nil, 'ISO-8859-1')
+		doc = Nokogiri::HTML(html.read, nil, 'utf-8')
 
 		menu = Hash.new
 
