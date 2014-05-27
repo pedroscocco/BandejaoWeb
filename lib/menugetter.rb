@@ -13,29 +13,40 @@ class MenuGetter
 	end
 
 	def self.insertIntoDatabase(menuHash, restaurant)
-		dish_types = ['Arroz/Feijão', 'Principal', 'Acompanhamento', 'Salada', 'Opcional', 'Sobremesa', 'Calorias']
-
 		date = menuHash[:date]
 		menu = Menu.create(restaurant:restaurant, date:date)
 		strings = menuHash[:days]
 		strings.each_with_index do |substrings, index|
-			day = menu.days.create(name:substrings[0], datetime:date+(60*60*12*index))
+			day = menu.days.new(name:substrings[0], datetime:date+(60*60*12*index))
+
 			substrings.delete_at(0)
 			if substrings.count > 7
-				dish_types.insert(3, 'Salada')
+				substrings[3] = substrings[3] +'/'+ substrings[4]
+				substrings.delete_at(4)
 			end
-			substrings.each_with_index do |dish, index|
-				day.dishes.create(name:dish, dish_type:dish_types[index])
-			end
+
+			day.principal = substrings[0]
+			day.mistura = substrings[1]
+			day.acompanhamento = substrings[2]
+			day.salada = substrings[3]
+			day.opcional = substrings[4]
+			day.sobremesa = substrings[5]
+			
+			day.save
 		end
 
 	end
 
 	def self.getMenu(restaurante)
 		url = "http://www.usp.br/coseas/cardapio#{restaurante}.html"
-		html = open(url)
-		doc = Nokogiri::HTML(html.read, nil, 'utf-8')
+		body = open(url).read
 
+		ec = Encoding::Converter.new("ISO-8859-15", "UTF-8", :universal_newline => true)
+
+		utf8_body = ec.convert(body)
+
+		doc = Nokogiri::HTML(utf8_body)
+		# p doc.encoding
 		menu = Hash.new
 
 		doc.xpath("//pre").each do |pre|
