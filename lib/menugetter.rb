@@ -72,9 +72,9 @@ class MenuGetter
 			parse_html(e, substrings)
 			if restaurante == 'quimica'
 				substrings.delete_at(-2)
-			else
-				substrings.each {|str| str.gsub!('/refresco', '')}
-			end	
+			end
+			substrings.each {|str| str.gsub!(/\/refresco|Opcional/, '')}
+
 			strings << substrings
 		end
 
